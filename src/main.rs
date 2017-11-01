@@ -1,23 +1,19 @@
-use std::fmt;
-struct Matrix(
-    f32, f32, f32, f32
-);
+use std::mem;
 
-fn transpose(matrix: Matrix) -> Matrix {
-    Matrix(matrix.0, matrix.2, matrix.1, matrix.3)
-}
-
-impl fmt::Display for Matrix {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "( {0} {1} )\n( {2} {3} )", &self.0, &self.1, &self.2, &self.3)
-    }
+fn tell_me_about_my_slice(slice: &[i64]) {
+    println!("First element is: {}", slice[0] );
+    println!("Length of slice: {}", slice.len() );
 }
 
 fn main() {
-    let tuple_of_tuples = ((1u8, 2u16, 3u32), (4u64, -1i8), -2i16);
-    println!("{:?}", tuple_of_tuples);
+    let first: [i64; 5] = [1, 2, 3, 4, 5];
+    let second: [i64; 100] = [1; 100];
 
-    let matrix = Matrix(1.12, 2.23, 3.34, 4.45);
-    println!("{}", matrix);
-    println!("{}", transpose(matrix))
+    println!("First array");
+    tell_me_about_my_slice(&first);
+    tell_me_about_my_slice(&second);
+    tell_me_about_my_slice(&second[1..5]);
+
+    println!("Stack allocated size for first array is: {}", mem::size_of_val(&first));
+    println!("Stack allocated size for second array is: {}", mem::size_of_val(&second));
 }
