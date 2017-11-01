@@ -1,29 +1,23 @@
-use std::fmt::{self, Formatter, Display};
+use std::fmt;
+struct Matrix(
+    f32, f32, f32, f32
+);
 
-struct City {
-    name: &'static str,
-    latitude: f32,
-    longitude: f32
+fn transpose(matrix: Matrix) -> Matrix {
+    Matrix(matrix.0, matrix.2, matrix.1, matrix.3)
 }
 
-impl Display for City {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        let latitude_direction = if self.latitude >= 0.0 { "North" } else { "South" };
-        let longitude_direction = if self.longitude >= 0.0 { "East" } else { "West" };
-
-        write!(f, 
-            "{}: {:.3}deg{} {:.3}deg{}", 
-            self.name, self.latitude.abs(), latitude_direction,
-            self.longitude.abs(), longitude_direction
-        )
+impl fmt::Display for Matrix {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "( {0} {1} )\n( {2} {3} )", &self.0, &self.1, &self.2, &self.3)
     }
 }
 
 fn main() {
-    for city in [
-        City {name: "Dublin", latitude: 44.67, longitude: -7.56},
-        City {name: "Mumbai", latitude: 12.34, longitude: 12.74}
-    ].iter() {
-        println!("{}", *city);
-    }
+    let tuple_of_tuples = ((1u8, 2u16, 3u32), (4u64, -1i8), -2i16);
+    println!("{:?}", tuple_of_tuples);
+
+    let matrix = Matrix(1.12, 2.23, 3.34, 4.45);
+    println!("{}", matrix);
+    println!("{}", transpose(matrix))
 }
