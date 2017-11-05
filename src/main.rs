@@ -1,19 +1,31 @@
-use std::mem;
+use List::*;
 
-fn tell_me_about_my_slice(slice: &[i64]) {
-    println!("First element is: {}", slice[0] );
-    println!("Length of slice: {}", slice.len() );
+enum List {
+    Node(u32, Box<List>),
+    Nil
+}
+
+impl List {
+    fn new() -> List {
+        Nil
+    }
+
+    fn prepend(self, element: u32) -> List {
+        Node(element, Box::new(self))
+    }
+    fn length(&self) -> u32 {
+        match *self {
+            Node(_, ref tail) => tail.length() + 1,
+            Nil => 0
+        }
+    }
 }
 
 fn main() {
-    let first: [i64; 5] = [1, 2, 3, 4, 5];
-    let second: [i64; 100] = [1; 100];
+    let mut list = List::new();
 
-    println!("First array");
-    tell_me_about_my_slice(&first);
-    tell_me_about_my_slice(&second);
-    tell_me_about_my_slice(&second[1..5]);
+    list = list.prepend(1);
+    list = list.prepend(2);
 
-    println!("Stack allocated size for first array is: {}", mem::size_of_val(&first));
-    println!("Stack allocated size for second array is: {}", mem::size_of_val(&second));
+    println!("{:?}", list.length());
 }
