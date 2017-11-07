@@ -1,31 +1,23 @@
-use List::*;
-
-enum List {
-    Node(u32, Box<List>),
-    Nil
+struct Person {
+    age: u32
 }
 
-impl List {
-    fn new() -> List {
-        Nil
+impl std::convert::From<u32> for Person {
+    fn from(age: u32) -> Self {
+        Person { age: age }
     }
+}
 
-    fn prepend(self, element: u32) -> List {
-        Node(element, Box::new(self))
-    }
-    fn length(&self) -> u32 {
-        match *self {
-            Node(_, ref tail) => tail.length() + 1,
-            Nil => 0
-        }
+impl std::fmt::Display for Person {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "This person's age is: {0}", self.age)
     }
 }
 
 fn main() {
-    let mut list = List::new();
-
-    list = list.prepend(1);
-    list = list.prepend(2);
-
-    println!("{:?}", list.length());
+    let age: u32 = 50;
+    let person_one: Person = Person::from(32);
+    let person_two: Person = age.into();
+    println!("{}", person_one);
+    println!("{}", person_two);
 }
