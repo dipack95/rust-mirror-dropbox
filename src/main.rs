@@ -1,23 +1,25 @@
-struct Person {
-    age: u32
-}
+extern crate notify;
 
-impl std::convert::From<u32> for Person {
-    fn from(age: u32) -> Self {
-        Person { age: age }
-    }
-}
+use notify::{RecommendedWatcher, Watcher, RecursiveMode};
 
-impl std::fmt::Display for Person {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "This person's age is: {0}", self.age)
+fn watch(watch_directory: String) -> notify::Result<()> {
+    let (tx, rx) = std::sync::mpsc::channel();
+
+    let mut watcher: RecommendedWatcher = Watcher::new(tx, std::time::Duration::from_secs(5))?;
+
+    watcher.watch(watch_directory, RecursiveMode::Recursive)?;
+
+    loop {
+        match rx.recv() {
+            Ok(event) => println!("Something happened: {:?}", event),
+            Err(event) => println!("Watch error: {:?}", event)
+        }
     }
 }
 
 fn main() {
-    let age: u32 = 50;
-    let person_one: Person = Person::from(32);
-    let person_two: Person = age.into();
-    println!("{}", person_one);
-    println!("{}", person_two);
+    let watch_directory: String = "D:\\Scripts".to_string();
+    if let Err(event) = watch(watch_directory) {
+        println!("Main thread: Error: {:?}", event)
+    }
 }
